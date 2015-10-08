@@ -42,6 +42,7 @@ curl 10.100.195.200:8500/v1/catalog/service/liferay \
     | jq '.'
 ```
 
+Open [http://10.100.195.200:8500/](http://10.100.195.200:8500/).
 Open [http://liferay/](http://liferay/).
 
 Recuperating From the Application Failure
@@ -61,6 +62,7 @@ curl 10.100.195.200:8500/v1/catalog/service/liferay \
     | jq '.'
 ```
 
+Open [http://10.100.195.200:8500/](http://10.100.195.200:8500/).
 Open [http://liferay/](http://liferay/).
 
 Recuperating From the Server Failure
@@ -91,6 +93,7 @@ curl 10.100.195.200:8500/v1/catalog/service/liferay \
 cat /data/nginx/upstreams/liferay.conf
 ```
 
+Open [http://10.100.195.200:8500/](http://10.100.195.200:8500/).
 Open [http://liferay/](http://liferay/).
 
 Cleaning Up
@@ -113,5 +116,3 @@ exit
 
 vagrant halt
 ```
-
-curl -XPUT -v -d '{"DataCenter": "dc1", "Node": "swarm-node-2", "ServiceID": ""}' http://127.0.0.1:8500/v1/catalog/deregister
