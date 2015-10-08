@@ -1,5 +1,5 @@
 upstream liferay {
-{{range service "liferay" "any"}}
+{{range service "liferay"}}
     server {{.Address}}:{{.Port}};
     {{end}}
 }

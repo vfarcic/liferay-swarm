@@ -26,6 +26,8 @@ curl 10.100.195.200:8500/v1/catalog/services \
 Running the Application
 -----------------------
 
+# TODO: Figure out how to avoid running the watcher after the first run
+
 ```bash
 ansible-playbook /vagrant/ansible/liferay.yml \
     -i /vagrant/ansible/hosts/prod \
@@ -54,6 +56,9 @@ sudo DOCKER_HOST=tcp://10.100.195.200:2375 \
 tail -f /data/consul/logs/watches.log # Stop with CTRL+c
 
 docker ps | grep life
+
+curl 10.100.195.200:8500/v1/catalog/service/liferay \
+    | jq '.'
 ```
 
 Open [http://liferay/](http://liferay/).
@@ -82,6 +87,8 @@ docker ps | grep life
 
 curl 10.100.195.200:8500/v1/catalog/service/liferay \
     | jq '.'
+
+cat /data/nginx/upstreams/liferay.conf
 ```
 
 Open [http://liferay/](http://liferay/).
@@ -92,7 +99,7 @@ Cleaning Up
 ```bash
 sudo rm -f /data/consul/config/liferay.json
 
-killall -HUP consul
+sudo killall -HUP consul
 
 cd /data/liferay
 
@@ -106,3 +113,5 @@ exit
 
 vagrant halt
 ```
+
+curl -XPUT -v -d '{"DataCenter": "dc1", "Node": "swarm-node-2", "ServiceID": ""}' http://127.0.0.1:8500/v1/catalog/deregister
