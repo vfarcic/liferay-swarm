@@ -1,0 +1,53 @@
+- name: Directories are created
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+  with_items: directories
+  tags: [liferay]
+
+- name: Files are copied
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: files
+  tags: [liferay]
+
+- name: App container is running
+  shell: docker-compose scale app={{ scale_service }}
+  environment:
+    DOCKER_HOST: tcp://{{ swarm_master_ip }}:2375
+  args:
+    chdir: /data/liferay/
+  tags: [liferay]
+
+- pause: seconds=5
+  tags: [liferay]
+
+- name: Proxy is configured
+  shell: consul-template \
+    -consul localhost:8500 \
+    -template "/data/nginx/upstreams/liferay.conf.ctmpl:/data/nginx/upstreams/liferay.conf:docker kill -s HUP nginx" \
+    -once
+  tags: [liferay]
+
+- name: Wait untils the application is available
+  shell: curl --head --silent {{ proxy_url }}
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 20
+  delay: 10
+  tags: [liferay]
+
+- name: Consul configs are present
+  template:
+    src: consul_service.json
+    dest: /data/consul/config/liferay.json
+  register: health_result
+  tags: [liferay]
+
+- name: Consul is restarted
+  shell: killall -HUP consul
+  when: health_result|changed
+  tags: [liferay]

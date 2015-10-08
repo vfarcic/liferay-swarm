@@ -1,0 +1,4 @@
+ip: "{{ facter_ipaddress_eth1 }}"
+consul_extra: ""
+proxy_url: http://{{ facter_ipaddress_eth1 }}
+swarm_master_ip: 10.100.195.200

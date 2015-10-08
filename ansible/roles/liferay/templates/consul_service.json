@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "liferay-proxy",
+    "tags": ["service-check"],
+    "port": 80,
+    "address": "{{ ip }}",
+    "checks": [{
+      "id": "api",
+      "name": "HTTP on port 80",
+      "http": "{{ proxy_url }}",
+      "interval": "10s"
+    }]
+  }
+}

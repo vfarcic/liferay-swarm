@@ -1,0 +1,22 @@
+directories:
+  - /data/liferay/
+  - /data/nginx/includes/
+  - /data/nginx/upstreams/
+
+files: [
+  {
+    src: "docker-compose.yml",
+    dest: "/data/liferay/docker-compose.yml",
+    mode: "0644"
+  }, {
+     src: "nginx_includes.conf",
+     dest: "/data/nginx/includes/liferay.conf",
+     mode: "0644"
+  }, {
+     src: "nginx_upstreams.conf.ctmpl",
+     dest: "/data/nginx/upstreams/liferay.conf.ctmpl",
+     mode: "0644"
+   }
+]
+
+scale_service: 1
